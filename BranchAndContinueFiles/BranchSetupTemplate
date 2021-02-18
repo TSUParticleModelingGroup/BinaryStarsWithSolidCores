@@ -1,0 +1,53 @@
+Branch positions of the stars in kilometers from the origin:
+
+BranchPosition1.x = 3000000.0;
+BranchPosition1.y = 0.0;
+BranchPosition1.z = 0.0;
+
+BranchPosition2.x = -3000000.0;
+BranchPosition2.y = 0.0;
+BranchPosition2.z = 0.0;
+
+Branch velocities of the stars in kilometers per second:
+
+BranchVelocity1.x =  0.0;
+BranchVelocity1.y =  -115.0;
+BranchVelocity1.z =  0.0;
+
+BranchVelocity2.x =  0.0;
+BranchVelocity2.y =  115.0;
+BranchVelocity2.z =  0.0;
+
+The time parameters are in days (24 hour periods):
+
+BranchRunTime = 3.0;
+
+Time when the growth of the star starts.
+
+GrowthStartTime1 = 0.1;
+
+Time when the growth of the star stops.
+
+GrowthStopTime1 = 1.5;
+
+The rate to grow the push back function.
+
+PercentForceIncrease1 = 0.000001;
+
+GrowthStartTime2 = 0.1;
+
+Time when the growth of the star stops.
+
+GrowthStopTime2 = 1.0;
+
+The rate to grow the push back function.
+
+PercentForceIncrease2 = 0.000001;
+
+The iterations between writing positions and velosities to a file.
+
+RecordRate = 100;
+
+The iterations between displaying the simulation to the sreen.
+
+DrawRate = 10;

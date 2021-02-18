@@ -36,7 +36,7 @@ Initial spin direction vectors and angular velocity in revolutions per hour of t
 InitialSpin2.x = 0.0;
 InitialSpin2.y = 0.0;
 InitialSpin2.z = 1.0;
-InitialSpin2.w = -0.01;
+InitialSpin2.w = -0.02;
 
 How often you draw to the screen. How many iteration are run between draws.
 DrawRate = 10;
