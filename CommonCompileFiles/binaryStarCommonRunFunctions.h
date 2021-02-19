@@ -20,7 +20,7 @@ float4 getCenterOfMass()
 	centerOfMass.x = cmx/totalMass;
 	centerOfMass.y = cmy/totalMass;
 	centerOfMass.z = cmz/totalMass;
-	centerOfMass.w = 0.0;
+	centerOfMass.w = totalMass;
 	
 	return(centerOfMass);
 }
@@ -119,13 +119,13 @@ static void signalHandler(int signum)
 	{
 		copyStarsDownFromGPU();
 		CenterOfView = PosCPU[0];
-		cout << "\nReset view to current center of mass." << endl;
+		cout << "\nReset view to the center of core 1." << endl;
 	}
 	else if(command == 4)
 	{
 		copyStarsDownFromGPU();
-		CenterOfView = PosCPU[NumberElements];
-		cout << "\nReset view to current center of mass." << endl;
+		CenterOfView = PosCPU[NumberElementsStar1];
+		cout << "\nReset view to the center of core 2." << endl;
 	}
 	else if (command == 5)
 	{
