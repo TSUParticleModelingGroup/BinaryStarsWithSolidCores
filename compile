@@ -21,3 +21,8 @@ mkdir ../ExecutableFiles
 mv StarBuilder.exe ../ExecutableFiles
 mv StarBranchRun.exe ../ExecutableFiles
 mv StarContinueRun.exe ../ExecutableFiles
+
+cd ..
+chmod 777 ./BuildStars
+chmod 777 ./BranchAndContinueFiles/BranchRun
+chmod 777 ./BranchAndContinueFiles/ContinueRun
