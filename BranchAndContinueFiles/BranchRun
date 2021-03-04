@@ -1,0 +1,5 @@
+# Branch run script
+
+echo "Branch run has started"
+
+./ExecutableFiles/StarBranchRun.exe

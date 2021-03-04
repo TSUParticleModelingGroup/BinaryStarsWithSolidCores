@@ -1,0 +1,10 @@
+# Continue run script
+
+echo How long would you like to continue this run in hours?
+
+read time
+
+../ExecutableFiles/StarContinueRun.exe $time
+
+echo "Continue run has started"
+
