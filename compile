@@ -1,0 +1,28 @@
+# Compile script
+
+cd ./MainSourceFiles
+
+echo "StarBuilder compile start"
+nvcc StarBuilder.cu -o StarBuilder.exe -lglut -lGL -lGLU -lm --use_fast_math
+echo "StarBuilder compile end"
+
+echo "StarBranchRun compile start"
+nvcc StarBranchRun.cu -o StarBranchRun.exe -lglut -lGL -lGLU -lm --use_fast_math
+echo "StarBranchRun compile end"
+
+echo "StarContinueRun compile start"
+nvcc StarContinueRun.cu -o StarContinueRun.exe -lglut -lGL -lGLU -lm --use_fast_math
+echo "StarContinueRun compile end"
+
+rm -r ../ExecutableFiles
+
+mkdir ../ExecutableFiles
+
+mv StarBuilder.exe ../ExecutableFiles
+mv StarBranchRun.exe ../ExecutableFiles
+mv StarContinueRun.exe ../ExecutableFiles
+
+cd ..
+chmod 777 ./BuildStars
+chmod 777 ./BranchAndContinueFiles/BranchRun
+chmod 777 ./BranchAndContinueFiles/ContinueRun

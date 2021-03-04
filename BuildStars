@@ -1,0 +1,4 @@
+# Create Stars script
+
+echo "Building stars"
+./ExecutableFiles/StarBuilder.exe

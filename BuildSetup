@@ -1,0 +1,43 @@
+
+Diameter of stars 1 in fraction of the Sun's diameter: 
+DiameterStar1 = 1.0;
+
+Diameter of the core of stars 1 in fraction of the Sun's Diameter: 
+DiameterCore1 = 0.1;
+
+Diameter of stars 2 in fraction of the Sun's Diameter: 
+DiameterStar2 = 1.0;
+
+Diameter of the core of stars 2 in fraction of the Sun's Diameter: 
+DiameterCore2 = 0.1;
+
+Mass of stars 1 in fraction of the Sun's mass: 
+MassOfStar1 = 1.0;
+
+Mass of the core of stars 1 in fraction of the Sun's mass: 
+MassOfCore1 = 0.1;
+
+Mass of stars 2 in fraction of the Sun's mass: 
+MassOfStar2 = 1.0;
+
+Mass of the core of stars 2 in fraction of the Sun's mass: 
+MassOfCore2 = 0.1;
+
+The total number of elements used in the simulation 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288:
+NumberOfElements = 16384;
+
+Initial spin direction vectors and angular velocity in revolutions per hour of the Star 1:
+InitialSpin1.x = 0.0;
+InitialSpin1.y = 0.0;
+InitialSpin1.z = 1.0;
+InitialSpin1.w = 0.02;
+
+Initial spin direction vectors and angular velocity in revolutions per hour of the Star 2:
+InitialSpin2.x = 0.0;
+InitialSpin2.y = 0.0;
+InitialSpin2.z = 1.0;
+InitialSpin2.w = -0.02;
+
+How often you draw to the screen. How many iteration are run between draws.
+DrawRate = 10;
+
