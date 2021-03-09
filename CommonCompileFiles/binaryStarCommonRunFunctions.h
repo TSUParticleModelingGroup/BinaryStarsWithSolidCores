@@ -30,21 +30,22 @@ void drawPicture()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	//Drawing the cores spheres
-	glPushMatrix();
-		glTranslatef(PosCPU[0].x - CenterOfView.x, PosCPU[0].y - CenterOfView.y, PosCPU[0].z - CenterOfView.z);
-		glColor3d(1.0,0.0,0.0);
-		glutSolidSphere(ForceCPU[0].w*0.2,20,20);  // force.w holds the diameter of an element
-	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(PosCPU[NumberElementsStar1].x - CenterOfView.x, PosCPU[NumberElementsStar1].y - CenterOfView.y, PosCPU[NumberElementsStar1].z - CenterOfView.z);
 		glColor3d(0.0,0.0,1.0);
-		glutSolidSphere(ForceCPU[NumberElementsStar1].w*0.2,20,20);
+		glutSolidSphere(ForceCPU[NumberElementsStar1].w,20,20);
 	glPopMatrix();
 	
-	glPointSize(5.0);
+	glPushMatrix();
+		glTranslatef(PosCPU[0].x - CenterOfView.x, PosCPU[0].y - CenterOfView.y, PosCPU[0].z - CenterOfView.z);
+		glColor3d(1.0,0.0,0.0);
+		glutSolidSphere(ForceCPU[0].w,20,20);  // force.w holds the diameter of an element
+	glPopMatrix();
+	
 	glBegin(GL_POINTS);
 		//Drawing all the elements as points
+		glPointSize(5.0);
 		glColor3d(1.0,0.6,0.0);
  		for(int i = 0; i < NumberElementsStar1; i++)
 		{
@@ -56,10 +57,11 @@ void drawPicture()
 			glVertex3f(PosCPU[i].x - CenterOfView.x, PosCPU[i].y - CenterOfView.y, PosCPU[i].z - CenterOfView.z);
 		}
 		//Putting a colored point on the cores so you can track them
+		glPointSize(1.0);
 		glColor3d(1.0,0.0,0.0);
-		glVertex3f(PosCPU[0].x - CenterOfView.x, PosCPU[0].y - CenterOfView.y, PosCPU[0].z - CenterOfView.z);
+		//glVertex3f(PosCPU[0].x - CenterOfView.x, PosCPU[0].y - CenterOfView.y, PosCPU[0].z - CenterOfView.z);
 		glColor3d(0.0,0.0,1.0);
-		glVertex3f(PosCPU[NumberElementsStar1].x - CenterOfView.x, PosCPU[NumberElementsStar1].y - CenterOfView.y, PosCPU[NumberElementsStar1].z - CenterOfView.z);
+		//glVertex3f(PosCPU[NumberElementsStar1].x - CenterOfView.x, PosCPU[NumberElementsStar1].y - CenterOfView.y, PosCPU[NumberElementsStar1].z - CenterOfView.z);
 	glEnd();
 	
 	glutSwapBuffers();

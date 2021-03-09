@@ -33,6 +33,7 @@ float4 *PosGPU[4], *VelGPU[4], *ForceGPU[4];
 //Globals to setup the kernals
 dim3 BlockConfig, GridConfig;
 
+
 //Globals to be readin from the RunParameters file
 double SystemLengthConverterToKilometers;
 double SystemMassConverterToKilograms;

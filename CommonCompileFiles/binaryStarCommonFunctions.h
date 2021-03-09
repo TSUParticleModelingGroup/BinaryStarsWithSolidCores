@@ -65,19 +65,13 @@ int deviceSetup()
 	int numberOfGpus;
 	int gPUsUsed;
 	
-	if(NumberElements%BLOCKSIZE != 0)
-	{
-		printf("\nTSU Error: Number of Particles is not a multiple of the block size \n\n");
-		exit(0);
-	}
-	
 	cudaGetDeviceCount(&numberOfGpus);
 	errorCheck("cudaGetDeviceCount");
-	printf("\n You have %d GPU(s) available\n", numberOfGpus);
+	//printf("\n You have %d GPU(s) available\n", numberOfGpus);
 	
 	if(numberOfGpus == 0)
 	{
-		printf("\nTSU error: You do not have a GPU. Sorry but you can't run this code.\n");
+		printf("\nTSU error: You do not have a GPU. Sorry but you can't run this code. Call NVDIA and buy a GPU Dude!!!\n");
 		exit(0);
 	}
 	else if(numberOfGpus == 1)
@@ -150,7 +144,26 @@ int deviceSetup()
 		*/
 	}
 	
-	//gPUsUsed = 2;
+	if(NumberElements%BLOCKSIZE != 0)
+	{
+		printf("\nTSU Error: Number of Particles is not a multiple of the block size \n\n");
+		exit(0);
+	}
+	
+	// Reducing the block size so it can evenly split the elements across the GPUs
+	if(NumberElements < BLOCKSIZE*gPUsUsed)
+	{
+		if(gPUsUsed == 4)
+		{
+			gPUsUsed = 2;
+			if(NumberElements < BLOCKSIZE*gPUsUsed)
+			{
+				gPUsUsed = 1;
+			}
+		}
+	}
+	
+	printf("\n Block size = %d \n", BLOCKSIZE);	
 	printf("\n You will be using %d GPUs\n", gPUsUsed);
 	
 	BlockConfig.x = BLOCKSIZE;
@@ -269,7 +282,7 @@ __device__ float4 calculateCorePlasmaForce(int coreFlag, float4 posMe, float4 po
 {
 	float4 dp, dv, force;
 	float r, r2, r3, invr, inOut, force_mag;
-	float gravity, firstTouch, coreMass, corePushBack, maxPushBack, plasmaPushBack;
+	float gravity, firstTouch, coreMass, corePushBack, maxPushBack; //plasmaPushBack;
 	
 	dp.x = posYou.x - posMe.x;
 	dp.y = posYou.y - posMe.y;
@@ -284,13 +297,13 @@ __device__ float4 calculateCorePlasmaForce(int coreFlag, float4 posMe, float4 po
 	{
 		coreMass = posMe.w;  
 		corePushBack = velMe.w;
-		plasmaPushBack = velYou.w;
+		//plasmaPushBack = velYou.w;
 	}
 	else 			// You is the core element.
 	{
 		coreMass = posYou.w; 
 		corePushBack = velYou.w;
-		plasmaPushBack = velMe.w;
+		//plasmaPushBack = velMe.w;
 	}
 	
 	if(firstTouch <= r)  // force.w holds the diameters so this is when the just touch or greater (only gravity).
@@ -309,7 +322,8 @@ __device__ float4 calculateCorePlasmaForce(int coreFlag, float4 posMe, float4 po
 		inOut = dp.x*dv.x + dp.y*dv.y + dp.z*dv.z;
 		
 		gravity = coreMass/(firstTouch*firstTouch);  //Holding gravity constant at where they touched. G =1 amd mass of plasma = 1.
-		maxPushBack = corePushBack + plasmaPushBack*(PI/6.0f);
+		//maxPushBack = corePushBack + plasmaPushBack*(PI/6.0f);
+		maxPushBack = corePushBack*gravity;
 		
 		// Making a linear increasing function from 0 to max.
 		if(inOut <= 0) 	force_mag  = gravity - (-maxPushBack*r/firstTouch + maxPushBack);
@@ -322,15 +336,15 @@ __device__ float4 calculateCorePlasmaForce(int coreFlag, float4 posMe, float4 po
 	}
 	else // Hopefully this line of code never gets reached.
 	{
-		dp.x = posYou.x - posMe.x;
-		dp.y = posYou.y - posMe.y;
-		dp.z = posYou.z - posMe.z;
+		dv.x = velYou.x - velMe.x;
+		dv.y = velYou.y - velMe.y;
+		dv.z = velYou.z - velMe.z;
 		if(0.0f < (dv.x*dv.x + dv.y*dv.y + dv.z*dv.z)) // Hopefully if they do not have the same velocity they will drift past setting right on top of eachother.
 		{
 			force.x = 0.0f;
 			force.y = 0.0f;
 			force.z = 0.0f;
-			//printf("\n TSU error: Core Elements on top of each other in calculatePlasmaCoreForce \n");
+			printf("\n TSU error: Core Elements on top of each other in calculatePlasmaCoreForce \n");
 		}
 		else 	// If they have the same velocity we will need to kick them off of died center. 
 			//This will work but I think I'll should kill the program to see if I need to patch the code.
@@ -338,7 +352,7 @@ __device__ float4 calculateCorePlasmaForce(int coreFlag, float4 posMe, float4 po
 			force.x = 0.0001f;
 			force.y = 0.0f;
 			force.z = 0.0f;
-			//printf("\n TSU error: Core Elements stuck on top of each other in calculatePlasmaCoreForce \n");
+			printf("\n TSU error: Core Elements stuck on top of each other in calculatePlasmaCoreForce \n");
 		}
 	}
 	
@@ -377,7 +391,7 @@ __device__ float4 calculateCoreCoreForce(float4 posMe, float4 posYou, float4 vel
 		inOut = dp.x*dv.x + dp.y*dv.y + dp.z*dv.z;
 		
 		gravity = posYou.w*posMe.w/(firstTouch*firstTouch);  //Holding gravity constant at where they touched. G =1 amd mass of plasma = 1.
-		maxPushBack = (velYou.w + velMe.w)*0.5;  //vel.w hold push back
+		maxPushBack = 10.0*gravity*(velYou.w + velMe.w)*0.5;  //vel.w hold push back
 		
 		// Making a linear increasing function from 0 to max.
 		if(inOut <= 0) 	force_mag  = gravity - (-maxPushBack*r/firstTouch + maxPushBack);
@@ -398,7 +412,7 @@ __device__ float4 calculateCoreCoreForce(float4 posMe, float4 posYou, float4 vel
 			force.x = 0.0f;
 			force.y = 0.0f;
 			force.z = 0.0f;
-			//printf("\n TSU error: Core Core Elements on top of each other in calculatePlasmaCoreForce \n");
+			printf("\n TSU error: Core Core Elements on top of each other in calculatePlasmaCoreForce \n");
 		}
 		else 	// If they have the same velocity we will need to kick them off of died center. 
 			//This will work but I think I'll should kill the program to see if I need to patch the code.
@@ -406,7 +420,7 @@ __device__ float4 calculateCoreCoreForce(float4 posMe, float4 posYou, float4 vel
 			force.x = 0.0001f;
 			force.y = 0.0f;
 			force.z = 0.0f;
-			//printf("\n TSU error: Core Core Elements stuck on top of each other in calculatePlasmaCoreForce \n");
+			printf("\n TSU error: Core Core Elements stuck on top of each other in calculatePlasmaCoreForce \n");
 		}
 	}
 	return(force);

@@ -149,6 +149,10 @@ __global__ void getForces(float4 *pos, float4 *vel, float4 *force, int numberEle
 					{
 						partialForce = calculateCoreCoreForce(posMe, shPos[i], velMe, shVel[i], forceMe, shForce[i], corePushBackReduction);
 					}
+					else if(id == numberElementsStar1 && ids == 0)
+					{
+						partialForce = calculateCoreCoreForce(posMe, shPos[i], velMe, shVel[i], forceMe, shForce[i], corePushBackReduction);
+					}
 					else if(id == 0 || id == numberElementsStar1)
 					{
 						partialForce = calculateCorePlasmaForce(0, posMe, shPos[i], velMe, shVel[i], forceMe, shForce[i], corePushBackReduction);

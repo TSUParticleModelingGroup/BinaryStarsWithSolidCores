@@ -20,10 +20,10 @@
 #define PUSH_BACK_PLASMA2 6.0e13
 
 //This will be multiplier of the force of gravity when a plasma element first touches a core element.
-#define PUSH_BACK_CORE_MULT1 1.0f
+#define PUSH_BACK_CORE_MULT1 20.0f
 
 //This will be multiplier of the force of gravity when a plasma element first touches a core element.
-#define PUSH_BACK_CORE_MULT2 1.0f
+#define PUSH_BACK_CORE_MULT2 20.0f
 
 //How much to reduce the push back when plasma-plasma elements are retreating (it is multiplied by the push back strenght).
 #define PLASMA_PUSH_BACK_REDUCTION 0.1

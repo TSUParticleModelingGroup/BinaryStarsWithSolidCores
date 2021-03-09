@@ -19,8 +19,8 @@ double PushBackPlasma1 = PUSH_BACK_PLASMA1;
 double PushBackPlasma2 = PUSH_BACK_PLASMA2;
 
 //Globals to be setup in generateAndSaveRunParameters function			
-double PushBackCore1;
-double PushBackCore2;
+double PushBackCoreMult1;
+double PushBackCoreMult2;
 
 void createFolderForNewStars()
 {   	
@@ -483,8 +483,8 @@ void generateAndSaveRunParameters()
 	PushBackPlasma2 *= SystemTimeConverterToSeconds*SystemTimeConverterToSeconds*SystemLengthConverterToKilometers/SystemMassConverterToKilograms;
 	
 	//This will be the max of a lenear push back from when a plasma element first hits the core. G = 1 and diameter of plasma element = 1
-	PushBackCore1 = PUSH_BACK_CORE_MULT1*MassOfStar1/(((DiameterCore1 + 1.0)/2.0)*((DiameterCore1 + 1.0)/2.0));
-	PushBackCore2 = PUSH_BACK_CORE_MULT2*MassOfStar2/(((DiameterCore2 + 1.0)/2.0)*((DiameterCore2 + 1.0)/2.0));
+	PushBackCoreMult1 = PUSH_BACK_CORE_MULT1;
+	PushBackCoreMult2 = PUSH_BACK_CORE_MULT2;
 	
 	FILE *runParametersFile;
 	runParametersFile = fopen("FilesFromBuild/RunParameters", "wb");
@@ -524,7 +524,7 @@ int createRawStar(int starNumber)
 		VelCPU[0].x = 0.0;
 		VelCPU[0].y = 0.0;
 		VelCPU[0].z = 0.0;
-		VelCPU[0].w = PushBackCore1;
+		VelCPU[0].w = PushBackCoreMult1;
 		ForceCPU[0].x = 0.0;
 		ForceCPU[0].y = 0.0;
 		ForceCPU[0].z = 0.0;
@@ -546,7 +546,7 @@ int createRawStar(int starNumber)
 		VelCPU[NumberElementsStar1].x = 0.0;
 		VelCPU[NumberElementsStar1].y = 0.0;
 		VelCPU[NumberElementsStar1].z = 0.0;
-		VelCPU[NumberElementsStar1].w = PushBackCore2;
+		VelCPU[NumberElementsStar1].w = PushBackCoreMult2;
 		ForceCPU[NumberElementsStar1].x = 0.0;
 		ForceCPU[NumberElementsStar1].y = 0.0;
 		ForceCPU[NumberElementsStar1].z = 0.0;
@@ -685,9 +685,9 @@ int createRawStar(int starNumber)
 	// Setting the randum number generater seed.
 	srand((unsigned) time(&t));
 	
-	// Giving each particle a randium velocity to shake things up a little.
+	// Giving each noncore particle a randium velocity to shake things up a little. Also setting the pushback and diameter of noncore particles.
 	speed = MAX_INITIAL_PLASMA_SPEED/SystemLengthConverterToKilometers/SystemTimeConverterToSeconds;
-	for(int i = elementStart; i < elementStop; i++)
+	for(int i = elementStart + 1; i < elementStop; i++)
 	{
 		VelCPU[i].x = ((float)rand()/(float)RAND_MAX)*2.0 - 1.0;;
 		VelCPU[i].y = ((float)rand()/(float)RAND_MAX)*2.0 - 1.0;;
@@ -697,11 +697,13 @@ int createRawStar(int starNumber)
 		VelCPU[i].x *= speed/mag;
 		VelCPU[i].y *= speed/mag;
 		VelCPU[i].z *= speed/mag;
+	
 		VelCPU[i].w = elementPushBack;
 		
 		ForceCPU[i].x = 0.0;
 		ForceCPU[i].y = 0.0;
 		ForceCPU[i].z = 0.0;
+		
 		ForceCPU[i].w = elementDiameter;
 	}
 	
@@ -934,7 +936,14 @@ double getStarRadius(int starNumber)
 		used[i] = 0;
 	}
 	
-	numberToSum = NUMBER_ELEMENTS_RADIUS;
+	if(elementStop < NUMBER_ELEMENTS_RADIUS)
+	{
+		numberToSum = elementStop - 1;
+	}
+	else
+	{
+		numberToSum = NUMBER_ELEMENTS_RADIUS;
+	}
 	radiusSum = 0.0;
 	count = 0;
 	for(j = 0; j < numberToSum; j++)

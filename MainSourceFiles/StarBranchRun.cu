@@ -247,6 +247,18 @@ void readAndSetBranchParameters()
 	GrowthStartTimeStar2 *= (60.0*60.0*24.0)/SystemTimeConverterToSeconds;
 	GrowthStopTimeStar2 *= (60.0*60.0*24.0)/SystemTimeConverterToSeconds;
 	
+	if(BranchRunTime < GrowthStopTimeStar1)
+	{
+		printf("\nTSU Error: BranchRunTime is less than GrowthStopTimeStar1.\n");
+		exit(0);
+	}
+	
+	if(BranchRunTime < GrowthStopTimeStar2)
+	{
+		printf("\nTSU Error: BranchRunTime is less than GrowthStopTimeStar2.\n");
+		exit(0);
+	}
+	
 	//Recording info into the BranchRunParameters file
 	fprintf(BranchRunParameters, "\n RecordRate = %d", RecordRate);
 	fprintf(BranchRunParameters, "\n DrawRate = %d", DrawRate);
@@ -349,6 +361,10 @@ __global__ void getForces(float4 *pos, float4 *vel, float4 *force, int numberEle
 				if(id != ids)
 				{
 					if(id == 0 && ids == numberElementsStar1)
+					{
+						partialForce = calculateCoreCoreForce(posMe, shPos[i], velMe, shVel[i], forceMe, shForce[i], corePushBackReduction);
+					}
+					else if(id == numberElementsStar1 && ids == 0)
 					{
 						partialForce = calculateCoreCoreForce(posMe, shPos[i], velMe, shVel[i], forceMe, shForce[i], corePushBackReduction);
 					}
